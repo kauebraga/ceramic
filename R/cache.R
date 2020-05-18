@@ -153,7 +153,8 @@ tile_x <- function(x) {
   as.integer(basename(dirname(x)))
 }
 tile_y <- function(x) {
-  as.integer(gsub('([0-9]+).*','\\1', basename(x)))
+  #xbase <- basename(x)
+  stop("not implemented")
 }
 tile_zoom <- function(x) {
   as.integer(basename(dirname(dirname(x))))
@@ -201,6 +202,8 @@ slippy_cache <- function(...) {
   ceramic_cache(...)
 }
 url_to_cache <- function(x) {
+  # add png extension
+  x <- paste0(x, ".png")
   base_filepath <- file.path(ceramic_cache(), gsub("^//", "", gsub("^https\\:", "", gsub("^https\\:", "", x))))
   ## chuck off any ? junk
   out <- unlist(lapply(strsplit(base_filepath, "\\?"), "[", 1L))

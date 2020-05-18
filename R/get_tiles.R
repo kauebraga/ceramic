@@ -1,5 +1,5 @@
 provider_from_type <- function(type) {
-  if (grepl("mapbox", type)) return("mapbox")
+  if (grepl("mapbox|styles", type)) return("mapbox")
   if (grepl("elevation-tiles-prod", type)) return("aws")
   NULL
 }
@@ -37,7 +37,7 @@ guess_format <- function(x) {
 #' @param format tile format to use, defaults to "jpg" for Mapbox satellite imagery and "png" otherwise
 #' @param ... arguments passed to internal function, specifically `base_url` (see Details)
 #' @param zoom desired zoom for tiles, use with caution - if `NULL` is chosen automatically
-#' @param debug optionally avoid actual download, but print out what would be downloaded in non-debug mode
+#' @param debug optionally print out files that will be used
 #' @param max_tiles maximum number of tiles - if `NULL` is set by zoom constraints
 #' @param base_url tile provider URL expert use only
 #' @param verbose report messages or suppress them
@@ -92,8 +92,7 @@ get_tiles <- function(x, buffer, type = "mapbox.satellite", crop_to_buffer = TRU
 
   files <- unlist(down_loader(tile_grid, query_string, debug = debug, verbose = verbose))
   bad <- file.info(files)$size < 35
-
-  if (!debug && all(bad)) {
+  if (all(bad)) {
     mess <-paste(files, collapse = "\n")
     stop(sprintf("no sensible tiles found, check cache?\n%s", mess))
   }
